@@ -16,29 +16,29 @@ const PRODUCTS_TYP = gql`
     }
 `;
 
-const PRODUCTS_KOLOR = gql`
-    query productsTypQuery($value: String!) {
-        products(orderBy: model_ASC, where: { kolor: $value}) {
-        model,
-        kolor,
-        inStock,
-        inDelivery,
-        id
-        }
-    }
-`;
+// const PRODUCTS_KOLOR = gql`
+//     query productsTypQuery($value: String!) {
+//         products(orderBy: model_ASC, where: { kolor: $value}) {
+//         model,
+//         kolor,
+//         inStock,
+//         inDelivery,
+//         id
+//         }
+//     }
+// `;
 
-const PRODUCTS_MODEL = gql`
-    query productsTypQuery($value: String!) {
-        products(orderBy: model_ASC, where: { model: $value}) {
-        model,
-        kolor,
-        inStock,
-        inDelivery,
-        id
-        }
-    }
-`;
+// const PRODUCTS_MODEL = gql`
+//     query productsTypQuery($value: String!) {
+//         products(orderBy: model_ASC, where: { model: $value}) {
+//         model,
+//         kolor,
+//         inStock,
+//         inDelivery,
+//         id
+//         }
+//     }
+// `;
 
 const ProductList = () => {
     const [ filter, setFilter ] = useState('Długopis');
