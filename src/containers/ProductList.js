@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 const PRODUCTS_TYP = gql`
     query productsTypQuery($value: String!) {
-        products(orderBy: model_ASC, where: { typ: $value}) {
+        products(orderBy: model_ASC, where: { typ: $value}, first: 1000) {
         model,
         kolor,
         inStock,
@@ -70,10 +70,13 @@ const StyledList = styled.ul`
     padding: 0;
     list-style-type: none;
     display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0;
     flex-wrap: wrap;
     margin: 0 auto;
-    width: 1200px;
+    width: 1600px;
+    max-width: 100vw;
 `;
 
 const StyledSection = styled.section`

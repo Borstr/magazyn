@@ -101,4 +101,5 @@ const StyledProduct = styled.li`
   width: calc(1200px/3 - 2rem);
   text-align: center;
   background-color: #fff;
+  max-width: 100%
 `;
