@@ -49,7 +49,6 @@ const ProductList = () => {
         const { loading, error, data } = useQuery(INDELIVERY, { variables: { value: filter }});
         if(loading) return <p>Loading...</p>
         if(error) return <p>Error</p>
-        console.log(data.products)
         return <Delivery>
             {data.products.map(product => 
                 <p key={product.id}>{product.model} {product.kolor}: <span>{product.inDelivery}</span></p>    

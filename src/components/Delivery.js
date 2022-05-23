@@ -1,18 +1,25 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 
-const Delivery = ({ children }) =>
-    <StyledAside>
-        <StyledTitle>Dostawy</StyledTitle>
-        <StyledContent>
-            {children.map(child => child)}
-        </StyledContent>
-    </StyledAside>
+const Delivery = ({ children }) => {
+    const [ isExpanded, triggerExpansion ] = useState(true);
+    return (
+        <StyledAside>
+            {isExpanded ? 
+            <>
+                <StyledTitle>Dostawy</StyledTitle>
+                <StyledContent>
+                    {children.map(child => child)}
+                </StyledContent>
+            </> : null}
+            <StyledButton onClick={() => triggerExpansion(!isExpanded)}>ZWIŃ</StyledButton>
+        </StyledAside>
+    );
+}
 
 export default Delivery;
 
 const StyledAside = styled.aside`
-    min-width: 200px;
-    min-height: 4rem;
     position: fixed;
     left: 0;
     top: 8rem;
@@ -23,6 +30,19 @@ const StyledAside = styled.aside`
     border-top-left-radius: 0;
     background-color: #fff;
     box-shadow: 0 0 6px 3px rgba(0, 0, 0, .32);
+`;
+
+const StyledButton = styled.button`
+    margin: .5rem;
+    border: none;
+    background-color: transparent;
+    color: #616ae0;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+        
+    }
 `;
 
 const StyledTitle = styled.p`
@@ -37,7 +57,7 @@ const StyledContent = styled.div`
     padding: .5rem;
     
     & > p {
-        margin: .25rem;
+        margin: 0.25rem;
         width: calc(100% - 1rem);
         display: flex;
         justify-content: space-between;
