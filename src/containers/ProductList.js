@@ -1,5 +1,6 @@
 import Product from '../components/Product';
 import Navbar from '../components/Navbar';
+import Delivery from '../components/Delivery';
 import { gql, useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import { useState } from 'react';
@@ -16,29 +17,17 @@ const PRODUCTS_TYP = gql`
     }
 `;
 
-// const PRODUCTS_KOLOR = gql`
-//     query productsTypQuery($value: String!) {
-//         products(orderBy: model_ASC, where: { kolor: $value}) {
-//         model,
-//         kolor,
-//         inStock,
-//         inDelivery,
-//         id
-//         }
-//     }
-// `;
-
-// const PRODUCTS_MODEL = gql`
-//     query productsTypQuery($value: String!) {
-//         products(orderBy: model_ASC, where: { model: $value}) {
-//         model,
-//         kolor,
-//         inStock,
-//         inDelivery,
-//         id
-//         }
-//     }
-// `;
+const INDELIVERY = gql`
+    query inDeliveryQuery {
+        products(orderBy: model_ASC, where: { typ: "Długopis", inDelivery_gt: 0 }, first: 1000) {
+        model,
+        kolor,
+        inStock,
+        inDelivery,
+        id
+        }
+    }
+`;
 
 const ProductList = () => {
     const [ filter, setFilter ] = useState('Długopis');
@@ -56,8 +45,21 @@ const ProductList = () => {
         );
     }
 
+    function InDelivery() {
+        const { loading, error, data } = useQuery(INDELIVERY, { variables: { value: filter }});
+        if(loading) return <p>Loading...</p>
+        if(error) return <p>Error</p>
+        console.log(data.products)
+        return <Delivery>
+            {data.products.map(product => 
+                <p key={product.id}>{product.model} {product.kolor}: <span>{product.inDelivery}</span></p>    
+            )}
+        </Delivery>
+    }
+
     return <StyledSection>
         <Navbar setFilter={data => setFilter(data)} />
+        {InDelivery(filter)}
         <StyledList>
             {Products(filter)}
         </StyledList>
