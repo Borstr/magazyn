@@ -1,35 +1,41 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useMutation, gql } from '@apollo/client';
+import React from 'react';
 
-const Delivery = ({ children }) => {
+const updateDeliveryToStockMutation = gql`
+  mutation updateInDelivery($id: ID!, $inStock: Int!) {
+    updateProduct(where: {id: $id}, data: {inDelivery: 0, inStock: $inStock}) {
+      model
+    }
+  }
+`
+
+const Delivery = ({ children, data, PRODUCTS_QUERY }) => {
     const [ isExpanded, triggerExpansion ] = useState(true);
+    const [ toggleDeliveryToStockMutation, { mutationDeliveryToStockData } ] = useMutation(updateDeliveryToStockMutation, { refetchQueries: [ PRODUCTS_QUERY ]});
+
+    function updateDeliveryToStock(id) {
+        toggleDeliveryToStockMutation({ variables: { id: id, inStock: Number(data.inDelivery) + Number(data.inStock) }});
+    }
+
     return (
-        <StyledAside>
+        <StyledContainer>
             {isExpanded ? 
             <>
                 <StyledTitle>Dostawy</StyledTitle>
                 <StyledContent>
-                    {children.map(child => child)}
+                    {children.map(child => <div key={child.key}><p>{child} </p><StyledButton onClick={() => updateDeliveryToStock(child.key)}>dodaj</StyledButton></div>)}
                 </StyledContent>
             </> : null}
             <StyledButton onClick={() => triggerExpansion(!isExpanded)}>ZWIŃ</StyledButton>
-        </StyledAside>
+        </StyledContainer>
     );
 }
 
 export default Delivery;
 
-const StyledAside = styled.aside`
-    position: fixed;
-    left: 0;
-    top: 8rem;
-    border: 2px solid #616ae0;
-    border-left: none;
-    border-radius: 3px;
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-    background-color: #fff;
-    box-shadow: 0 0 6px 3px rgba(0, 0, 0, .32);
+const StyledContainer = styled.div`
 `;
 
 const StyledButton = styled.button`
@@ -39,10 +45,7 @@ const StyledButton = styled.button`
     color: #616ae0;
     font-weight: bold;
     cursor: pointer;
-
-    &:hover {
-        
-    }
+    width: auto;
 `;
 
 const StyledTitle = styled.p`
@@ -55,13 +58,21 @@ const StyledTitle = styled.p`
 
 const StyledContent = styled.div`
     padding: .5rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+    max-width: 500px;
     
-    & > p {
-        margin: 0.25rem;
-        width: calc(100% - 1rem);
+    & p {
+        margin: .5rem 0;
+    }
+
+    & > div {
+        border-bottom: 1px solid #616ae0;
+        width: 100%;
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
-        border-bottom: 1px solid #616ae0;
     }
 `;

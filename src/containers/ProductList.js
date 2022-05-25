@@ -1,9 +1,12 @@
 import Product from '../components/Product';
 import Navbar from '../components/Navbar';
 import Delivery from '../components/Delivery';
+import Sidebar from '../components/Sidebar';
+
 import { gql, useQuery } from '@apollo/client';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import React from 'react';
 
 const PRODUCTS_TYP = gql`
     query productsTypQuery($value: String!) {
@@ -31,36 +34,23 @@ const INDELIVERY = gql`
 
 const ProductList = () => {
     const [ filter, setFilter ] = useState('Długopis');
-    function Products(filter) {
-        const { loading, error, data } = useQuery(PRODUCTS_TYP, { variables: { value: filter }});
-        if(loading) return <p>Loading...</p>
-        if(error) return <p>Error</p>
-
-        return data.products.map(product => 
-            <Product 
-                PRODUCTS_QUERY={PRODUCTS_TYP}
-                key={product.id} 
-                data={product} 
-            />
-        );
-    }
-
-    function InDelivery() {
-        const { loading, error, data } = useQuery(INDELIVERY, { variables: { value: filter }});
-        if(loading) return <p>Loading...</p>
-        if(error) return <p>Error</p>
-        return <Delivery>
-            {data.products.map(product => 
-                <p key={product.id}>{product.model} {product.kolor}: <span>{product.inDelivery}</span></p>    
-            )}
-        </Delivery>
-    }
+    const { loading, error, data = [] } = useQuery(PRODUCTS_TYP, { variables: { value: filter }});
+    
+    if(loading || error) return <p>Loading...</p>
 
     return <StyledSection>
-        <Navbar setFilter={data => setFilter(data)} />
-        {InDelivery(filter)}
+        <Navbar setFilter={filterData => setFilter(filterData)} />
+        <Sidebar data={data.products} />
         <StyledList>
-            {Products(filter)}
+            {
+                data.products.map(product => 
+                    <Product 
+                        PRODUCTS_QUERY={PRODUCTS_TYP}
+                        key={product.id} 
+                        data={product} 
+                    />
+                )
+            }
         </StyledList>
     </StyledSection>
 }
@@ -76,6 +66,7 @@ const StyledList = styled.ul`
     margin: 0;
     flex-wrap: wrap;
     margin: 0 auto;
+    margin-left: 300px;
     width: 1600px;
     max-width: 100vw;
 `;

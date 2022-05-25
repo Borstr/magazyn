@@ -46,7 +46,7 @@ const Product = ({ data, PRODUCTS_QUERY }) => {
     toggleDeliveryToStockMutation({ variables: { id: data.id, inStock: Number(data.inDelivery) + Number(data.inStock) }});
   }
 
-  return <StyledProduct>
+  return <StyledProduct id={`${data.model}_${data.kolor}`}>
     <StyledTitle>{data.model} {data.kolor}</StyledTitle>
     <StyledP>Na stanie: {data.inStock}</StyledP>
     <StyledP>W dostawie: {data.inDelivery}</StyledP>
