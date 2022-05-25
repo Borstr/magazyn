@@ -41,4 +41,5 @@ const StyledProduct = styled(AnchorLink)`
     color: #000;
     text-decoration: none;
     margin: .5rem 0;
+    border-bottom: 2px solid #616ae0;
 `;
